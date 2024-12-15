@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "TorangGrid"
 include(":app")
+include(":library")
