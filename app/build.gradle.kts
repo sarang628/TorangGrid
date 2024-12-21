@@ -130,7 +130,6 @@ dependencies {
     /** Navigation end */
 
 
-    implementation(libs.feed)
     implementation(libs.theme)
     implementation(libs.torangRepository)
     implementation(libs.basefeed)
