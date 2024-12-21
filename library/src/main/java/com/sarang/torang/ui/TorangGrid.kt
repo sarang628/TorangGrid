@@ -10,29 +10,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 
 @Composable
 fun TorangGrid(
+    viewModel: TorangGridViewModel = hiltViewModel(),
     modifier: Modifier,
-    image: @Composable (Modifier, String, Dp?, Dp?, ContentScale?) -> Unit = { _, _, _, _, _ -> },
-    urls: List<String>
+    image: @Composable (Modifier, String, Dp?, Dp?, ContentScale?) -> Unit = { _, _, _, _, _ -> }
 ) {
-    LazyVerticalGrid(
-        modifier = modifier,
-        contentPadding = PaddingValues(1.dp),
-        columns = GridCells.Adaptive(minSize = 128.dp),
-        verticalArrangement = Arrangement.spacedBy(1.dp),
-        horizontalArrangement = Arrangement.spacedBy(1.dp)
-    ) {
-        items(urls.size) {
-            image.invoke(
-                Modifier.size(128.dp),
-                urls[it],
-                30.dp,
-                30.dp,
-                ContentScale.Crop
-            )
+    val uiState = viewModel.uiState
+    when (uiState) {
+        is FeedGridUiState.Loading -> {}
+        is FeedGridUiState.Error -> {}
+        is FeedGridUiState.Success -> {
+            LazyVerticalGrid(
+                modifier = modifier,
+                contentPadding = PaddingValues(1.dp),
+                columns = GridCells.Adaptive(minSize = 128.dp),
+                verticalArrangement = Arrangement.spacedBy(1.dp),
+                horizontalArrangement = Arrangement.spacedBy(1.dp)
+            ) {
+                items(uiState.list.size) {
+                    image.invoke(
+                        Modifier.size(128.dp),
+                        uiState.list[it] ?: "",
+                        30.dp,
+                        30.dp,
+                        ContentScale.Crop
+                    )
+                }
+            }
         }
     }
 }

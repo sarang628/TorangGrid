@@ -58,8 +58,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(LocalConfiguration.current.screenHeightDp.dp),
-                                image = provideTorangAsyncImage(),
-                                urls = list.map { BuildConfig.REVIEW_IMAGE_SERVER_URL + it.images[0].pictureUrl }
+                                image = provideTorangAsyncImage()
                             )
                             LoginRepositoryTest(loginRepository)
                             FeedRepositoryTest(feedRepository)
@@ -77,7 +76,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     TorangGrid(
         modifier = Modifier,
         image = provideTorangAsyncImage(),
-        urls = listOf("", "", "")
     )
 }
 
