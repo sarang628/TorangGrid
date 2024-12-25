@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sarang.torang.di.feedgrid_di.ProvideTorangGrid
 import com.sarang.torang.di.image.provideTorangAsyncImage
 import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.FeedRepositoryTest
@@ -54,12 +55,8 @@ class MainActivity : ComponentActivity() {
                                 .padding(innerPadding)
                                 .verticalScroll(rememberScrollState())
                         ) {
-                            TorangGrid(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(LocalConfiguration.current.screenHeightDp.dp),
-                                image = provideTorangAsyncImage()
-                            )
+                            ProvideTorangGrid()
+
                             LoginRepositoryTest(loginRepository)
                             FeedRepositoryTest(feedRepository)
                         }
