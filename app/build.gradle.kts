@@ -136,6 +136,7 @@ dependencies {
     implementation(libs.commonImageLoader)
     implementation(libs.themes)
     implementation(libs.mui3scrolltorefresh)
+    implementation(libs.bottomdetectlazycolunm)
 
     implementation(project(":library"))
 }
