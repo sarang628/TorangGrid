@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -17,30 +16,41 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun TorangGrid(
     viewModel: TorangGridViewModel = hiltViewModel(),
     modifier: Modifier,
-    image: @Composable (Modifier, String, Dp?, Dp?, ContentScale?) -> Unit = { _, _, _, _, _ -> }
+    onBottom: () -> Unit = {},
+    image: @Composable (Modifier, String, Dp?, Dp?, ContentScale?) -> Unit = { _, _, _, _, _ -> },
+    bottomDetectingLazyVerticalGrid: @Composable (
+        modifier: Modifier,
+        items: Int,
+        columns: GridCells,
+        contentPadding: PaddingValues,
+        verticalArrangement: Arrangement.Vertical,
+        horizontalArrangement: Arrangement.Horizontal,
+        onBottom: () -> Unit,
+        content: @Composable (index: Int) -> Unit
+    ) -> Unit = { _, _, _, _, _, _, _, _ -> }
 ) {
-    val uiState = viewModel.uiState
-    when (uiState) {
+    when (val uiState = viewModel.uiState) {
         is FeedGridUiState.Loading -> {}
         is FeedGridUiState.Error -> {}
         is FeedGridUiState.Success -> {
-            LazyVerticalGrid(
-                modifier = modifier,
-                contentPadding = PaddingValues(1.dp),
-                columns = GridCells.Adaptive(minSize = 128.dp),
-                verticalArrangement = Arrangement.spacedBy(1.dp),
-                horizontalArrangement = Arrangement.spacedBy(1.dp)
-            ) {
-                items(uiState.list.size) {
+            bottomDetectingLazyVerticalGrid.invoke(
+                modifier,
+                uiState.list.size,
+                GridCells.Fixed(3),
+                PaddingValues(1.dp),
+                Arrangement.spacedBy(1.dp),
+                Arrangement.spacedBy(1.dp),
+                onBottom,
+                { index ->
                     image.invoke(
                         Modifier.size(128.dp),
-                        uiState.list[it] ?: "",
+                        uiState.list[index] ?: "",
                         30.dp,
                         30.dp,
                         ContentScale.Crop
                     )
                 }
-            }
+            )
         }
     }
 }
