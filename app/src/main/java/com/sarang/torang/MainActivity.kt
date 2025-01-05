@@ -57,12 +57,7 @@ class MainActivity : ComponentActivity() {
                                 .padding(innerPadding)
                                 .verticalScroll(rememberScrollState())
                         ) {
-                            ProvideTorangGrid {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("onBottom")
-                                }
-                            }
-
+                            ProvideTorangGrid()
 //                            LoginRepositoryTest(loginRepository)
 //                            FeedRepositoryTest(feedRepository)
                         }
@@ -79,6 +74,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     TorangGrid(
         modifier = Modifier,
         image = provideTorangAsyncImage(),
+        pullToRefreshLayout = { _, _ ->
+
+        }
     )
 }
 
