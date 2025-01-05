@@ -4,3 +4,6 @@
 [submodule "app/src/main/java/com/sarang/torang/di/repository"]
 	path = app/src/main/java/com/sarang/torang/di/repository
 	url = https://github.com/sarang628/repository.git
+[submodule "app/src/main/java/com/sarang/torang/di/feedgrid_di"]
+	path = app/src/main/java/com/sarang/torang/di/feedgrid_di
+	url = https://github.com/sarang628/feedgrid_di.git
