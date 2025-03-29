@@ -22,7 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.sarang.torang.di.feedgrid_di.ProvideTorangGrid
 import com.sarang.torang.di.image.provideTorangAsyncImage
 import com.sarang.torang.repository.FeedRepository
+import com.sarang.torang.repository.FeedRepositoryTest
 import com.sarang.torang.repository.LoginRepository
+import com.sarang.torang.repository.LoginRepositoryTest
 import com.sarang.torang.ui.TorangGrid
 import com.sarang.torang.ui.theme.TorangGridTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,8 +60,8 @@ class MainActivity : ComponentActivity() {
                                 .verticalScroll(rememberScrollState())
                         ) {
                             ProvideTorangGrid()
-//                            LoginRepositoryTest(loginRepository)
-//                            FeedRepositoryTest(feedRepository)
+                            LoginRepositoryTest(loginRepository)
+                            FeedRepositoryTest(feedRepository)
                         }
 
                     }
