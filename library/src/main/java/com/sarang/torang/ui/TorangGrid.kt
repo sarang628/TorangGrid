@@ -1,7 +1,7 @@
 package com.sarang.torang.ui
 
 import android.util.Log
-import android.widget.ProgressBar
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -38,55 +37,30 @@ import androidx.hilt.navigation.compose.hiltViewModel
  */
 @Composable
 fun TorangGrid(
-    viewModel: TorangGridViewModel = hiltViewModel(),
-    modifier: Modifier,
-    image: @Composable (Modifier, String, Dp?, Dp?, ContentScale?) -> Unit = { _, _, _, _, _ -> },
-    bottomDetectingLazyVerticalGrid: @Composable (
-        modifier: Modifier,
-        items: Int,
-        columns: GridCells,
-        contentPadding: PaddingValues,
-        verticalArrangement: Arrangement.Vertical,
-        horizontalArrangement: Arrangement.Horizontal,
-        onBottom: () -> Unit,
-        content: @Composable (index: Int) -> Unit
-    ) -> Unit = { _, _, _, _, _, _, _, _ -> },
-    pullToRefreshLayout: @Composable (@Composable () -> Unit, onRefresh: () -> Unit) -> Unit,
-    onFinishRefresh: () -> Unit = {}
+    viewModel       : TorangGridViewModel   = hiltViewModel(),
+    modifier        : Modifier              = Modifier,
+    onFinishRefresh : () -> Unit            = {},
+    onClickItem     : (Int) -> Unit         = {}
 ) {
     val uiState = viewModel.uiState
-    _TorangGrid(
-        uiState,
-        modifier,
-        image,
-        bottomDetectingLazyVerticalGrid,
-        pullToRefreshLayout,
-        onFinishRefresh,
-        viewModel::onRefresh,
-        viewModel::onBottom
+    TorangGridContainer(
+        uiState         = uiState,
+        modifier        = modifier,
+        onFinishRefresh = onFinishRefresh,
+        onRefresh       = viewModel::onRefresh,
+        onBottom        = viewModel::onBottom,
+        onClickItem     = onClickItem
     )
-
 }
 
 @Composable
-fun _TorangGrid(
-    uiState: FeedGridUiState,
-    modifier: Modifier,
-    image: @Composable (Modifier, String, Dp?, Dp?, ContentScale?) -> Unit = { _, _, _, _, _ -> },
-    bottomDetectingLazyVerticalGrid: @Composable (
-        modifier: Modifier,
-        items: Int,
-        columns: GridCells,
-        contentPadding: PaddingValues,
-        verticalArrangement: Arrangement.Vertical,
-        horizontalArrangement: Arrangement.Horizontal,
-        onBottom: () -> Unit,
-        content: @Composable (index: Int) -> Unit
-    ) -> Unit = { _, _, _, _, _, _, _, _ -> },
-    pullToRefreshLayout: @Composable (@Composable () -> Unit, onRefresh: () -> Unit) -> Unit,
-    onFinishRefresh: () -> Unit = {},
-    onRefresh: () -> Unit,
-    onBottom: (Int) -> Unit
+fun TorangGridContainer(
+    uiState         : FeedGridUiState,
+    modifier        : Modifier      = Modifier,
+    onFinishRefresh : () -> Unit    = {},
+    onRefresh       : () -> Unit    = {},
+    onBottom        : (Int) -> Unit = {},
+    onClickItem     : (Int) -> Unit = {}
 ) {
     LaunchedEffect(uiState) {
         if (uiState is FeedGridUiState.Success) {
@@ -121,48 +95,70 @@ fun _TorangGrid(
         }
 
         is FeedGridUiState.Success -> {
-            pullToRefreshLayout.invoke(
-                {
-                    bottomDetectingLazyVerticalGrid.invoke(
-                        modifier,
-                        uiState.list.size,
-                        GridCells.Fixed(3),
-                        PaddingValues(1.dp),
-                        Arrangement.spacedBy(1.dp),
-                        Arrangement.spacedBy(1.dp),
-                        {
-                            if (uiState.list.isNotEmpty()) {
-                                onBottom.invoke(uiState.list.last().first)
-                            }
-                        },
-                        { index ->
-                            image.invoke(
-                                Modifier.size(128.dp),
-                                uiState.list[index].second ?: "",
-                                30.dp,
-                                30.dp,
-                                ContentScale.Crop
-                            )
-                        }
-                    )
-                }, {
-                    onRefresh.invoke()
-                }
+            TorangGridSuccess(
+                uiState = uiState,
+                onRefresh = onRefresh,
+                modifier = modifier,
+                onBottom = onBottom,
+                onClickItem = onClickItem
             )
         }
     }
+}
+
+@Composable
+fun TorangGridSuccess(
+    modifier    : Modifier                  = Modifier,
+    tag         : String                    = "__TorangGridSuccess",
+    uiState     : FeedGridUiState.Success   = FeedGridUiState.Success(),
+    onRefresh   : () -> Unit                = {},
+    onBottom    : (Int) -> Unit             = {},
+    onClickItem : (Int) -> Unit             = {}
+){
+    LocalTorangGridPullToRefresh.current.invoke(
+        TorangGridPullToRefreshData(
+            onRefresh = onRefresh,
+        ){
+            LocalBottomDetectingLazyVerticalGridType.current(
+                BottomDetectingLazyVerticalGridData(
+                    modifier                = modifier,
+                    items                   = uiState.list.size,
+                    columns                 = GridCells.Fixed(3),
+                    contentPadding          = PaddingValues(1.dp),
+                    verticalArrangement     = Arrangement.spacedBy(1.dp),
+                    horizontalArrangement   = Arrangement.spacedBy(1.dp),
+                    onBottom                = {
+                        if (uiState.list.isNotEmpty()) {
+                            onBottom.invoke(uiState.list.last().first)
+                        }
+                    },
+                    content                 = { index ->
+                        LocalTorangGridImageLoaderType.current.invoke(
+                            TorangGridImageLoaderData(
+                                modifier        = Modifier.size(128.dp)
+                                    .clickable(onClick = {
+                                        onClickItem.invoke(uiState.list[index].first)
+                                    }),
+                                url             = uiState.list[index].second ?: "",
+                                iconSize        = 30.dp,
+                                errorIconSize   = 30.dp,
+                                contentScale    = ContentScale.Crop
+                            )
+                        )
+                    }
+                )
+            )
+        }
+    )
 }
 
 @Preview
 @Composable
 fun ErrorTest() {
     val uiState = FeedGridUiState.Error("test")
-    _TorangGrid(
+    TorangGridContainer(
         uiState = uiState,
         modifier = Modifier,
-        image = { _, _, _, _, _ -> },
-        bottomDetectingLazyVerticalGrid = { _, _, _, _, _, _, _, _ -> },
-        pullToRefreshLayout = { _, _ -> },
         onFinishRefresh = {},
         onBottom = { _ -> },
         onRefresh = {}
@@ -173,12 +169,9 @@ fun ErrorTest() {
 @Composable
 fun ProgressTest() {
     val uiState = FeedGridUiState.Loading
-    _TorangGrid(
+    TorangGridContainer(
         uiState = uiState,
         modifier = Modifier,
-        image = { _, _, _, _, _ -> },
-        bottomDetectingLazyVerticalGrid = { _, _, _, _, _, _, _, _ -> },
-        pullToRefreshLayout = { _, _ -> },
         onFinishRefresh = {},
         onBottom = { _ -> },
         onRefresh = {}
@@ -191,12 +184,9 @@ fun SuccessTest() {
     val uiState = FeedGridUiState.Success(
         listOf(Pair(0, "")), false
     )
-    _TorangGrid(
+    TorangGridContainer(
         uiState = uiState,
         modifier = Modifier,
-        image = { _, _, _, _, _ -> },
-        bottomDetectingLazyVerticalGrid = { _, _, _, _, _, _, _, _ -> },
-        pullToRefreshLayout = { _, _ -> },
         onFinishRefresh = {},
         onBottom = { _ -> },
         onRefresh = {}

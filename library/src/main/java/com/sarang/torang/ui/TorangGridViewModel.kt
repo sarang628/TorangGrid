@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 sealed interface FeedGridUiState {
     data class Error(val msg: String?) : FeedGridUiState
-    data class Success(val list: List<Pair<Int, String?>>, val isRefreshing: Boolean) :
+    data class Success(val list: List<Pair<Int, String?>> = listOf(), val isRefreshing: Boolean = false) :
         FeedGridUiState
 
     object Loading : FeedGridUiState
