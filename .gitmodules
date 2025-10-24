@@ -13,3 +13,15 @@
 [submodule "app/src/main/java/com/sarang/torang/di/torang_database_di"]
 	path = app/src/main/java/com/sarang/torang/di/torang_database_di
 	url = https://github.com/sarang628/torang_database_di.git
+[submodule "app/src/main/java/com/sarang/torang/di/feed_di"]
+	path = app/src/main/java/com/sarang/torang/di/feed_di
+	url = https://github.com/sarang628/feed_di.git
+[submodule "app/src/main/java/com/sarang/torang/di/pulltorefresh"]
+	path = app/src/main/java/com/sarang/torang/di/pulltorefresh
+	url = https://github.com/sarang628/pulltorefresh.git
+[submodule "app/src/main/java/com/sarang/torang/di/basefeed_di"]
+	path = app/src/main/java/com/sarang/torang/di/basefeed_di
+	url = https://github.com/sarang628/basefeed_di.git
+[submodule "app/src/main/java/com/sarang/torang/di/pinchzoom"]
+	path = app/src/main/java/com/sarang/torang/di/pinchzoom
+	url = https://github.com/sarang628/pinchzoom.git

@@ -68,11 +68,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Preview
-@Composable
-fun Greeting() {
-    TorangGrid(
-        modifier = Modifier
-    )
-}
