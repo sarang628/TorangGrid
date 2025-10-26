@@ -11,18 +11,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface FeedGridUiState {
-    data class Error(val msg: String?) : FeedGridUiState
-    data class Success(val list: List<Pair<Int, String?>> = listOf(), val isRefreshing: Boolean = false) :
-        FeedGridUiState
-
-    object Loading : FeedGridUiState
+    data class  Error(val msg: String?) : FeedGridUiState
+    object      Loading                 : FeedGridUiState
+    data class  Success(
+        val list            : List<Pair<Int, String?>>  = listOf(),
+        val isRefreshing    : Boolean                   = false
+    )                                   : FeedGridUiState
 }
 
 @HiltViewModel
 class TorangGridViewModel @Inject constructor(
-    private val useCase: GetFeedGridUseCase,
-    private val loadFeedUserCase: LoadFeedUseCase,
-    private val refreshFeedUseCase: RefreshFeedUseCase
+    private val getFeedGridUseCase  : GetFeedGridUseCase,
+    private val loadFeedUserCase    : LoadFeedUseCase,
+    private val refreshFeedUseCase  : RefreshFeedUseCase
 ) : ViewModel() {
     var uiState: FeedGridUiState by mutableStateOf(FeedGridUiState.Loading)
 
@@ -47,7 +48,7 @@ class TorangGridViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            useCase.invoke().collect {
+            getFeedGridUseCase.invoke().collect {
                 uiState = FeedGridUiState.Success(it, false)
             }
         }

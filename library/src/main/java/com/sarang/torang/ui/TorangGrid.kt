@@ -38,13 +38,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun TorangGrid(
     viewModel       : TorangGridViewModel   = hiltViewModel(),
+    showLog         : Boolean               = false,
     modifier        : Modifier              = Modifier,
     onFinishRefresh : () -> Unit            = {},
     onClickItem     : (Int) -> Unit         = {}
 ) {
-    val uiState = viewModel.uiState
     TorangGridContainer(
-        uiState         = uiState,
+        uiState         = viewModel.uiState,
+        showLog         = showLog,
         modifier        = modifier,
         onFinishRefresh = onFinishRefresh,
         onRefresh       = viewModel::onRefresh,
@@ -56,6 +57,7 @@ fun TorangGrid(
 @Composable
 fun TorangGridContainer(
     uiState         : FeedGridUiState,
+    showLog         : Boolean       = false,
     modifier        : Modifier      = Modifier,
     onFinishRefresh : () -> Unit    = {},
     onRefresh       : () -> Unit    = {},
@@ -96,10 +98,11 @@ fun TorangGridContainer(
 
         is FeedGridUiState.Success -> {
             TorangGridSuccess(
-                uiState = uiState,
-                onRefresh = onRefresh,
-                modifier = modifier,
-                onBottom = onBottom,
+                uiState     = uiState,
+                showLog     = showLog,
+                onRefresh   = onRefresh,
+                modifier    = modifier,
+                onBottom    = onBottom,
                 onClickItem = onClickItem
             )
         }
@@ -109,12 +112,18 @@ fun TorangGridContainer(
 @Composable
 fun TorangGridSuccess(
     modifier    : Modifier                  = Modifier,
+    showLog     : Boolean                   = false,
     tag         : String                    = "__TorangGridSuccess",
     uiState     : FeedGridUiState.Success   = FeedGridUiState.Success(),
     onRefresh   : () -> Unit                = {},
     onBottom    : (Int) -> Unit             = {},
     onClickItem : (Int) -> Unit             = {}
 ){
+
+    LaunchedEffect(uiState) {
+        showLog.d(tag, uiState.list.toString());
+    }
+
     LocalTorangGridPullToRefresh.current.invoke(
         TorangGridPullToRefreshData(
             onRefresh = onRefresh,
@@ -150,6 +159,13 @@ fun TorangGridSuccess(
             )
         }
     )
+}
+
+private fun Boolean.d(
+    tag: String,
+    msg: String
+) {
+    if(this)Log.d(tag, msg)
 }
 
 @Preview
