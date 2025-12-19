@@ -1,5 +1,5 @@
 package com.sarang.torang.usecase.feedgrid
 
-interface RefreshFeedUseCase {
+interface RefreshFeedGirdUseCase {
     suspend fun invoke()
 }

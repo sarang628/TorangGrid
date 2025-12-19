@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sarang.torang.compose.feedgrid.type.BottomDetectingLazyVerticalGridData
 import com.sarang.torang.compose.feedgrid.type.LocalBottomDetectingLazyVerticalGridType
 import com.sarang.torang.compose.feedgrid.type.LocalTorangGridImageLoaderType
@@ -43,14 +45,15 @@ import com.sarang.torang.compose.feedgrid.type.TorangGridPullToRefreshData
  */
 @Composable
 fun TorangGrid(
-    viewModel       : TorangGridViewModel = hiltViewModel(),
-    showLog         : Boolean               = false,
     modifier        : Modifier              = Modifier,
+    viewModel       : TorangGridViewModel   = hiltViewModel(),
+    showLog         : Boolean               = false,
     onFinishRefresh : () -> Unit            = {},
     onClickItem     : (Int) -> Unit         = {}
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     TorangGridContainer(
-        uiState         = viewModel.uiState,
+        uiState         = uiState,
         showLog         = showLog,
         modifier        = modifier,
         onFinishRefresh = onFinishRefresh,
@@ -62,9 +65,9 @@ fun TorangGrid(
 
 @Composable
 fun TorangGridContainer(
+    modifier        : Modifier      = Modifier,
     uiState         : FeedGridUiState,
     showLog         : Boolean       = false,
-    modifier        : Modifier      = Modifier,
     onFinishRefresh : () -> Unit    = {},
     onRefresh       : () -> Unit    = {},
     onBottom        : (Int) -> Unit = {},
@@ -115,58 +118,6 @@ fun TorangGridContainer(
     }
 }
 
-@Composable
-fun TorangGridSuccess(
-    modifier    : Modifier                  = Modifier,
-    showLog     : Boolean                   = false,
-    tag         : String                    = "__TorangGridSuccess",
-    uiState     : FeedGridUiState.Success   = FeedGridUiState.Success(),
-    onRefresh   : () -> Unit                = {},
-    onBottom    : (Int) -> Unit             = {},
-    onClickItem : (Int) -> Unit             = {}
-){
-
-    LaunchedEffect(uiState) {
-        showLog.d(tag, uiState.list.toString());
-    }
-
-    LocalTorangGridPullToRefresh.current.invoke(
-        TorangGridPullToRefreshData(
-            onRefresh = onRefresh,
-        ) {
-            LocalBottomDetectingLazyVerticalGridType.current(
-                BottomDetectingLazyVerticalGridData(
-                    modifier = modifier,
-                    items = uiState.list.size,
-                    columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(1.dp),
-                    verticalArrangement = Arrangement.spacedBy(1.dp),
-                    horizontalArrangement = Arrangement.spacedBy(1.dp),
-                    onBottom = {
-                        if (uiState.list.isNotEmpty()) {
-                            onBottom.invoke(uiState.list.last().first)
-                        }
-                    },
-                    content = { index ->
-                        LocalTorangGridImageLoaderType.current.invoke(
-                            TorangGridImageLoaderData(
-                                modifier = Modifier.size(128.dp)
-                                    .clickable(onClick = {
-                                        onClickItem.invoke(uiState.list[index].first)
-                                    }),
-                                url = uiState.list[index].second ?: "",
-                                iconSize = 30.dp,
-                                errorIconSize = 30.dp,
-                                contentScale = ContentScale.Crop
-                            )
-                        )
-                    }
-                )
-            )
-        }
-    )
-}
-
 private fun Boolean.d(
     tag: String,
     msg: String
@@ -191,21 +142,6 @@ fun ErrorTest() {
 @Composable
 fun ProgressTest() {
     val uiState = FeedGridUiState.Loading
-    TorangGridContainer(
-        uiState = uiState,
-        modifier = Modifier,
-        onFinishRefresh = {},
-        onBottom = { _ -> },
-        onRefresh = {}
-    )
-}
-
-@Preview
-@Composable
-fun SuccessTest() {
-    val uiState = FeedGridUiState.Success(
-        listOf(Pair(0, "")), false
-    )
     TorangGridContainer(
         uiState = uiState,
         modifier = Modifier,

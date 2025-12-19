@@ -1,5 +1,5 @@
 package com.sarang.torang.usecase.feedgrid
 
-interface LoadFeedUseCase {
+interface LoadFeedGridUseCase {
     suspend fun invoke(lastFeedId: Int)
 }
