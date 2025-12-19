@@ -1,4 +1,4 @@
-package com.sarang.torang.ui
+package com.sarang.torang.compose.feedgrid.type
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box

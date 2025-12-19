@@ -1,4 +1,4 @@
-package com.sarang.torang.ui
+package com.sarang.torang.usecase.feedgrid
 
 import kotlinx.coroutines.flow.Flow
 

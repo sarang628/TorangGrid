@@ -1,4 +1,4 @@
-package com.sarang.torang.ui
+package com.sarang.torang.compose.feedgrid.type
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

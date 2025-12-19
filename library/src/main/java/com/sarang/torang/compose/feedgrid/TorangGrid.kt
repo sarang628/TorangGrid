@@ -1,4 +1,4 @@
-package com.sarang.torang.ui
+package com.sarang.torang.compose.feedgrid
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -24,6 +24,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sarang.torang.compose.feedgrid.type.BottomDetectingLazyVerticalGridData
+import com.sarang.torang.compose.feedgrid.type.LocalBottomDetectingLazyVerticalGridType
+import com.sarang.torang.compose.feedgrid.type.LocalTorangGridImageLoaderType
+import com.sarang.torang.compose.feedgrid.type.LocalTorangGridPullToRefresh
+import com.sarang.torang.compose.feedgrid.type.TorangGridImageLoaderData
+import com.sarang.torang.compose.feedgrid.type.TorangGridPullToRefreshData
 
 /**
  * 그리드 형식으로 피드를 제공하는 화면
@@ -37,7 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
  */
 @Composable
 fun TorangGrid(
-    viewModel       : TorangGridViewModel   = hiltViewModel(),
+    viewModel       : TorangGridViewModel = hiltViewModel(),
     showLog         : Boolean               = false,
     modifier        : Modifier              = Modifier,
     onFinishRefresh : () -> Unit            = {},
@@ -127,31 +133,31 @@ fun TorangGridSuccess(
     LocalTorangGridPullToRefresh.current.invoke(
         TorangGridPullToRefreshData(
             onRefresh = onRefresh,
-        ){
+        ) {
             LocalBottomDetectingLazyVerticalGridType.current(
                 BottomDetectingLazyVerticalGridData(
-                    modifier                = modifier,
-                    items                   = uiState.list.size,
-                    columns                 = GridCells.Fixed(3),
-                    contentPadding          = PaddingValues(1.dp),
-                    verticalArrangement     = Arrangement.spacedBy(1.dp),
-                    horizontalArrangement   = Arrangement.spacedBy(1.dp),
-                    onBottom                = {
+                    modifier = modifier,
+                    items = uiState.list.size,
+                    columns = GridCells.Fixed(3),
+                    contentPadding = PaddingValues(1.dp),
+                    verticalArrangement = Arrangement.spacedBy(1.dp),
+                    horizontalArrangement = Arrangement.spacedBy(1.dp),
+                    onBottom = {
                         if (uiState.list.isNotEmpty()) {
                             onBottom.invoke(uiState.list.last().first)
                         }
                     },
-                    content                 = { index ->
+                    content = { index ->
                         LocalTorangGridImageLoaderType.current.invoke(
                             TorangGridImageLoaderData(
-                                modifier        = Modifier.size(128.dp)
+                                modifier = Modifier.size(128.dp)
                                     .clickable(onClick = {
                                         onClickItem.invoke(uiState.list[index].first)
                                     }),
-                                url             = uiState.list[index].second ?: "",
-                                iconSize        = 30.dp,
-                                errorIconSize   = 30.dp,
-                                contentScale    = ContentScale.Crop
+                                url = uiState.list[index].second ?: "",
+                                iconSize = 30.dp,
+                                errorIconSize = 30.dp,
+                                contentScale = ContentScale.Crop
                             )
                         )
                     }

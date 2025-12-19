@@ -1,4 +1,4 @@
-package com.sarang.torang.ui
+package com.sarang.torang.compose.feedgrid
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sarang.torang.usecase.feedgrid.GetFeedGridUseCase
+import com.sarang.torang.usecase.feedgrid.LoadFeedUseCase
+import com.sarang.torang.usecase.feedgrid.RefreshFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,10 +29,12 @@ class TorangGridViewModel @Inject constructor(
     private val refreshFeedUseCase  : RefreshFeedUseCase
 ) : ViewModel() {
     var uiState: FeedGridUiState by mutableStateOf(FeedGridUiState.Loading)
+    val tag = "__TorangGridViewModel"
 
     fun onBottom(feedId: Int) {
         viewModelScope.launch {
             try {
+                Log.d(tag, "onBottom feedId: $feedId")
                 loadFeedUserCase.invoke(feedId)
             } catch (e: Exception) {
                 Log.e("__TorangGridViewModel", e.toString())
