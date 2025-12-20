@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,11 +28,6 @@ fun TorangGridSuccess(
     onBottom    : (Int) -> Unit             = {},
     onClickItem : (Int) -> Unit             = {}
 ){
-
-    LaunchedEffect(uiState) {
-        showLog.d(tag, uiState.list.toString());
-    }
-
     LocalTorangGridPullToRefresh.current.invoke(
         TorangGridPullToRefreshData(
             onRefresh = onRefresh,
@@ -49,6 +43,8 @@ fun TorangGridSuccess(
                     onBottom                = {
                         if (uiState.list.isNotEmpty()) {
                             onBottom.invoke(uiState.list.last().reviewId)
+                        }else{
+                            onBottom.invoke(Int.MAX_VALUE)
                         }
                     },
                     content                 = { index ->

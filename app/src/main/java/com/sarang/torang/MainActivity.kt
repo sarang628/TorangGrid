@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -23,8 +21,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sarang.torang.di.feedgrid_di.ProvideTorangGrid
-import com.sarang.torang.repository.FeedRepository
 import com.sarang.torang.repository.LoginRepository
+import com.sarang.torang.repository.feed.FeedFlowRepository
+import com.sarang.torang.repository.feed.FeedLoadRepository
+import com.sarang.torang.repository.feed.FeedRepository
 import com.sarang.torang.repository.test.FeedRepositoryTest
 import com.sarang.torang.repository.test.LoginRepositoryTest
 import com.sarang.torang.ui.theme.TorangGridTheme
@@ -34,18 +34,18 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var loginRepository: LoginRepository
+    @Inject lateinit var loginRepository: LoginRepository
 
-    @Inject
-    lateinit var feedRepository: FeedRepository
+    @Inject lateinit var feedRepository: FeedRepository
+    @Inject lateinit var feedLoadRepository: FeedLoadRepository
+    @Inject lateinit var feedFlowRepository: FeedFlowRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TorangGridTheme {
 
-                val list by feedRepository.feeds.collectAsState(initial = emptyList())
+                val list by feedLoadRepository.feeds.collectAsState(initial = emptyList())
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 val navController = rememberNavController()
@@ -79,7 +79,9 @@ class MainActivity : ComponentActivity() {
                                 LoginRepositoryTest(loginRepository)
                             }
                             composable("feedRepository"){
-                                FeedRepositoryTest(feedRepository)
+                                FeedRepositoryTest(feedRepository = feedRepository,
+                                    feedLoadRepository = feedLoadRepository,
+                                    feedFlowRepository = feedFlowRepository)
                             }
                         }
 
