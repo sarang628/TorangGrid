@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -53,13 +52,13 @@ class MainActivity : ComponentActivity() {
             TorangGridTheme {
 
                 val list by feedLoadRepository.feeds.collectAsState(initial = emptyList())
-                val snackbarHostState = remember { SnackbarHostState() }
+                val snackBarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 val navController = rememberNavController()
                 val listState = rememberLazyGridState()
 
                 Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = {
-                    SnackbarHost(hostState = snackbarHostState)
+                    SnackbarHost(hostState = snackBarHostState)
                 }) { innerPadding ->
                     Box(Modifier.fillMaxSize().padding(innerPadding))
                     {
