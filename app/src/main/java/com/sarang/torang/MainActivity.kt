@@ -25,8 +25,8 @@ import com.sarang.torang.repository.LoginRepository
 import com.sarang.torang.repository.feed.FeedFlowRepository
 import com.sarang.torang.repository.feed.FeedLoadRepository
 import com.sarang.torang.repository.feed.FeedRepository
-import com.sarang.torang.repository.test.FeedRepositoryTest
 import com.sarang.torang.repository.test.LoginRepositoryTest
+import com.sarang.torang.repository.test.feed.FeedRepositoryTest
 import com.sarang.torang.ui.theme.TorangGridTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
