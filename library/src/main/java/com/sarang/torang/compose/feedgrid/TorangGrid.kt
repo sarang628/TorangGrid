@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,27 +37,20 @@ import com.sarang.torang.compose.feedgrid.type.TorangGridPullToRefreshData
 
 /**
  * 그리드 형식으로 피드를 제공하는 화면
- * @param viewModel 토랑 그리드 뷰모델
- * @param modifier Modifier
- * @param onBottom 그리드 하단 터치 콜백
- * @param image 이미지 로드 모듈을 외부에서 받아 사용
- * @param bottomDetectingLazyVerticalGrid 하단 감지 그리드를 외부에서 받아 사용
- * @param pullToRefreshLayout 당겨서 새로고침 레이아웃
- * @param onFinishRefresh 새로고침 데이터 갱신 완료 콜백
  */
 @Composable
 fun TorangGrid(
     modifier        : Modifier              = Modifier,
+    listState       : LazyGridState         = rememberLazyGridState(),
     viewModel       : TorangGridViewModel   = hiltViewModel(),
-    showLog         : Boolean               = false,
     onFinishRefresh : () -> Unit            = {},
     onClickItem     : (Int) -> Unit         = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     TorangGridContainer(
-        uiState         = uiState,
-        showLog         = showLog,
         modifier        = modifier,
+        uiState         = uiState,
+        listState       = listState,
         onFinishRefresh = onFinishRefresh,
         onRefresh       = viewModel::onRefresh,
         onBottom        = viewModel::onBottom,
@@ -65,13 +60,13 @@ fun TorangGrid(
 
 @Composable
 fun TorangGridContainer(
-    modifier        : Modifier      = Modifier,
-    uiState         : FeedGridUiState,
-    showLog         : Boolean       = false,
-    onFinishRefresh : () -> Unit    = {},
-    onRefresh       : () -> Unit    = {},
-    onBottom        : (Int) -> Unit = {},
-    onClickItem     : (Int) -> Unit = {}
+    modifier        : Modifier          = Modifier,
+    listState       : LazyGridState     = rememberLazyGridState(),
+    uiState         : FeedGridUiState   = FeedGridUiState.Loading,
+    onFinishRefresh : () -> Unit        = {},
+    onRefresh       : () -> Unit        = {},
+    onBottom        : (Int) -> Unit     = {},
+    onClickItem     : (Int) -> Unit     = {}
 ) {
     LaunchedEffect(uiState) {
         if (uiState is FeedGridUiState.Success) {
@@ -108,7 +103,7 @@ fun TorangGridContainer(
         is FeedGridUiState.Success -> {
             TorangGridSuccess(
                 uiState     = uiState,
-                showLog     = showLog,
+                listState   = listState,
                 onRefresh   = onRefresh,
                 modifier    = modifier,
                 onBottom    = onBottom,

@@ -7,7 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -29,6 +35,7 @@ import com.sarang.torang.repository.test.LoginRepositoryTest
 import com.sarang.torang.repository.test.feed.FeedRepositoryTest
 import com.sarang.torang.ui.theme.TorangGridTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,6 +56,7 @@ class MainActivity : ComponentActivity() {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 val navController = rememberNavController()
+                val listState = rememberLazyGridState()
 
                 Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = {
                     SnackbarHost(hostState = snackbarHostState)
@@ -73,7 +81,17 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             composable("torangGrid"){
-                                ProvideTorangGrid()
+                                Scaffold(floatingActionButton = {
+                                    FloatingActionButton({
+                                        scope.launch { listState.animateScrollToItem(0) }
+                                    }) {
+                                        Icon(imageVector = Icons.Default.KeyboardArrowUp,
+                                             contentDescription = null) }
+                                }) {
+                                    Box(modifier = Modifier.padding(it)){
+                                        ProvideTorangGrid(listState = listState)
+                                    }
+                                }
                             }
                             composable("loginRepository"){
                                 LoginRepositoryTest(loginRepository)

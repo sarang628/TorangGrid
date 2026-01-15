@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -18,11 +20,11 @@ import com.sarang.torang.compose.feedgrid.type.LocalTorangGridPullToRefresh
 import com.sarang.torang.compose.feedgrid.type.TorangGridImageLoaderData
 import com.sarang.torang.compose.feedgrid.type.TorangGridPullToRefreshData
 
+val TAG : String = "__TorangGridSuccess"
 @Composable
 fun TorangGridSuccess(
     modifier    : Modifier                  = Modifier,
-    showLog     : Boolean                   = false,
-    tag         : String                    = "__TorangGridSuccess",
+    listState   : LazyGridState             = rememberLazyGridState(),
     uiState     : FeedGridUiState.Success   = FeedGridUiState.Success(),
     onRefresh   : () -> Unit                = {},
     onBottom    : (Int) -> Unit             = {},
@@ -35,6 +37,7 @@ fun TorangGridSuccess(
             LocalBottomDetectingLazyVerticalGridType.current(
                 BottomDetectingLazyVerticalGridData(
                     modifier                = modifier,
+                    listState               = listState,
                     items                   = uiState.list.size,
                     columns                 = GridCells.Fixed(3),
                     contentPadding          = PaddingValues(1.dp),
