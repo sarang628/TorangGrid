@@ -31,7 +31,7 @@ import com.sarang.torang.repository.feed.FeedFlowRepository
 import com.sarang.torang.repository.feed.FeedLoadRepository
 import com.sarang.torang.repository.feed.FeedRepository
 import com.sarang.torang.repository.test.LoginRepositoryTest
-import com.sarang.torang.repository.test.feed.FeedRepositoryTest
+import com.sarang.torang.repository.test.feed.FeedRepositoryTestScreen
 import com.sarang.torang.ui.theme.TorangGridTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -96,7 +96,7 @@ class MainActivity : ComponentActivity() {
                                 LoginRepositoryTest(loginRepository)
                             }
                             composable("feedRepository"){
-                                FeedRepositoryTest(feedRepository = feedRepository,
+                                FeedRepositoryTestScreen(feedRepository = feedRepository,
                                     feedLoadRepository = feedLoadRepository,
                                     feedFlowRepository = feedFlowRepository)
                             }
