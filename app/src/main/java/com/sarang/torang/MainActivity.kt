@@ -33,6 +33,7 @@ import com.sarang.torang.repository.feed.FeedRepository
 import com.sarang.torang.repository.test.LoginRepositoryTest
 import com.sarang.torang.repository.test.feed.FeedRepositoryTestScreen
 import com.sarang.torang.ui.theme.TorangGridTheme
+import com.sryang.torang.ui.TorangTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,8 +48,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TorangGridTheme {
-
+            TorangTheme {
                 val list by feedLoadRepository.feeds.collectAsState(initial = emptyList())
                 val snackBarHostState = remember { SnackbarHostState() }
                 val navController = rememberNavController()

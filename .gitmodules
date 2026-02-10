@@ -28,3 +28,6 @@
 [submodule "app/src/main/java/com/sarang/torang/di/torang_security_di"]
 	path = app/src/main/java/com/sarang/torang/di/torang_security_di
 	url = https://github.com/sarang628/torang_security_di.git
+[submodule "app/src/main/java/com/sarang/torang/di/image"]
+	path = app/src/main/java/com/sarang/torang/di/image
+	url = https://github.com/sarang628/image.git

@@ -70,36 +70,15 @@ fun TorangGridContainer(
 ) {
     LaunchedEffect(uiState) {
         if (uiState is FeedGridUiState.Success) {
-            snapshotFlow {
-                uiState.isRefreshing
-            }.collect {
-                if (!it)
-                    onFinishRefresh.invoke()
+            snapshotFlow { uiState.isRefreshing }.collect {
+                if (!it) onFinishRefresh.invoke()
             }
         }
     }
 
     when (uiState) {
-        is FeedGridUiState.Loading -> {
-            Box(Modifier.fillMaxSize()) {
-                CircularProgressIndicator(modifier.align(Alignment.Center))
-            }
-        }
-
-        is FeedGridUiState.Error -> {
-            Box(Modifier.fillMaxSize()) {
-                Column(
-                    modifier = modifier.align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Default.Refresh, "")
-                    }
-                    Text("error")
-                }
-            }
-        }
-
+        is FeedGridUiState.Loading -> { TorangGridLoading() }
+        is FeedGridUiState.Error -> { TorangGridError() }
         is FeedGridUiState.Success -> {
             TorangGridSuccess(
                 uiState     = uiState,
