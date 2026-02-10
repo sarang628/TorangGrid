@@ -112,36 +112,3 @@ fun TorangGridContainer(
         }
     }
 }
-
-private fun Boolean.d(
-    tag: String,
-    msg: String
-) {
-    if(this)Log.d(tag, msg)
-}
-
-@Preview
-@Composable
-fun ErrorTest() {
-    val uiState = FeedGridUiState.Error("test")
-    TorangGridContainer(
-        uiState = uiState,
-        modifier = Modifier,
-        onFinishRefresh = {},
-        onBottom = { _ -> },
-        onRefresh = {}
-    )
-}
-
-@Preview
-@Composable
-fun ProgressTest() {
-    val uiState = FeedGridUiState.Loading
-    TorangGridContainer(
-        uiState = uiState,
-        modifier = Modifier,
-        onFinishRefresh = {},
-        onBottom = { _ -> },
-        onRefresh = {}
-    )
-}

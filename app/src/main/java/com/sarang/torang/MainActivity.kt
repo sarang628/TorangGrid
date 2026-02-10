@@ -39,9 +39,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject lateinit var loginRepository: LoginRepository
-
     @Inject lateinit var feedRepository: FeedRepository
     @Inject lateinit var feedLoadRepository: FeedLoadRepository
     @Inject lateinit var feedFlowRepository: FeedFlowRepository
@@ -53,9 +51,7 @@ class MainActivity : ComponentActivity() {
 
                 val list by feedLoadRepository.feeds.collectAsState(initial = emptyList())
                 val snackBarHostState = remember { SnackbarHostState() }
-                val scope = rememberCoroutineScope()
                 val navController = rememberNavController()
-                val listState = rememberLazyGridState()
 
                 Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = {
                     SnackbarHost(hostState = snackBarHostState)
@@ -66,32 +62,8 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = "menu"
                         ) {
-                            composable("menu"){
-                                Column() {
-                                    Button({
-                                        navController.navigate("torangGrid")
-                                    }) { Text("torangGrid") }
-                                    Button({
-                                        navController.navigate("loginRepository")
-                                    }) { Text("loginRepository") }
-                                    Button({
-                                        navController.navigate("feedRepository")
-                                    }) { Text("feedRepository") }
-                                }
-                            }
-                            composable("torangGrid"){
-                                Scaffold(floatingActionButton = {
-                                    FloatingActionButton({
-                                        scope.launch { listState.animateScrollToItem(0) }
-                                    }) {
-                                        Icon(imageVector = Icons.Default.KeyboardArrowUp,
-                                             contentDescription = null) }
-                                }) {
-                                    Box(modifier = Modifier.padding(it)){
-                                        ProvideTorangGrid(listState = listState)
-                                    }
-                                }
-                            }
+                            menu(navController)
+                            torangGridTest()
                             composable("loginRepository"){
                                 LoginRepositoryTest(loginRepository)
                             }

@@ -144,9 +144,10 @@ dependencies {
 
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.shortForm)
     implementation("androidx.media3:media3-session:1.4.0")
     implementation("androidx.media3:media3-exoplayer-hls:1.4.0")
-
+    implementation(libs.androidx.lifecycle.process)
+    implementation(libs.coil)
     implementation(project(":library"))
-    implementation("io.coil-kt:coil-compose:2.6.0")
 }
