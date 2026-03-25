@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,7 +38,6 @@ fun TorangGridSuccess(
                 BottomDetectingLazyVerticalGridData(
                     modifier                = modifier,
                     listState               = listState,
-                    items                   = uiState.list.size,
                     columns                 = GridCells.Fixed(3),
                     contentPadding          = PaddingValues(1.dp),
                     verticalArrangement     = Arrangement.spacedBy(1.dp),
@@ -49,19 +49,19 @@ fun TorangGridSuccess(
                             onBottom.invoke(Int.MAX_VALUE)
                         }
                     },
-                    content                 = { index ->
-                        LocalTorangGridImageLoaderType.current.invoke(
-                            TorangGridImageLoaderData(
-                                modifier        = Modifier.size(128.dp)
-                                                   .clickable(onClick = {
-                                                       onClickItem.invoke(uiState.list[index].reviewId)
-                                                   }),
-                                url             = uiState.list[index].imageUrl,
-                                iconSize        = 30.dp,
-                                errorIconSize   = 30.dp,
-                                contentScale    = ContentScale.Crop
+                    content                 = {
+                        items(uiState.list){
+                            LocalTorangGridImageLoaderType.current.invoke(
+                                TorangGridImageLoaderData(
+                                    modifier        = Modifier.size(128.dp)
+                                                              .clickable(onClick = { onClickItem.invoke(it.reviewId) }),
+                                    url             = it.imageUrl,
+                                    iconSize        = 30.dp,
+                                    errorIconSize   = 30.dp,
+                                    contentScale    = ContentScale.Crop
+                                )
                             )
-                        )
+                        }
                     }
                 )
             )

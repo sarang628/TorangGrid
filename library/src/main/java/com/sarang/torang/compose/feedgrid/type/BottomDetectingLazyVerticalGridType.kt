@@ -9,6 +9,5 @@ typealias BottomDetectingLazyVerticalGridType = @Composable (
 
 val LocalBottomDetectingLazyVerticalGridType = compositionLocalOf<BottomDetectingLazyVerticalGridType> {
     @Composable {
-        it.content(0)
     }
 }
