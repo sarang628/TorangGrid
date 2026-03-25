@@ -1,6 +1,5 @@
 package com.sarang.torang.compose.feedgrid
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -83,11 +82,4 @@ fun SuccessTest() {
         onBottom = { _ -> },
         onRefresh = {}
     )
-}
-
-private fun Boolean.d(
-    tag: String,
-    msg: String
-) {
-    if(this)Log.d(tag, msg)
 }

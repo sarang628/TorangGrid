@@ -16,8 +16,8 @@ import androidx.navigation.compose.composable
 import com.sarang.torang.di.feedgrid_di.ProvideTorangGrid
 import kotlinx.coroutines.launch
 
-internal fun NavGraphBuilder.torangGridTest(){
-    composable("torangGrid"){
+@Composable
+internal fun TorangGridTest(){
         val scope = rememberCoroutineScope()
         val listState = rememberLazyGridState()
         val floatingButton = @Composable {
@@ -32,10 +32,4 @@ internal fun NavGraphBuilder.torangGridTest(){
                 ProvideTorangGrid(listState = listState)
             }
         }
-    }
-}
-
-@Composable
-internal fun TorangGridTest(){
-
 }

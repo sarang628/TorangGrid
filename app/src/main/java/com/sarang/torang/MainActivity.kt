@@ -17,11 +17,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -49,7 +51,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TorangTheme {
-                val list by feedLoadRepository.feeds.collectAsState(initial = emptyList())
                 val snackBarHostState = remember { SnackbarHostState() }
                 val navController = rememberNavController()
 
@@ -58,25 +59,30 @@ class MainActivity : ComponentActivity() {
                 }) { innerPadding ->
                     Box(Modifier.fillMaxSize().padding(innerPadding))
                     {
-                        NavHost(modifier = Modifier.padding(innerPadding),
-                            navController = navController,
-                            startDestination = "menu"
-                        ) {
-                            menu(navController)
-                            torangGridTest()
-                            composable("loginRepository"){
-                                LoginRepositoryTest(loginRepository)
-                            }
-                            composable("feedRepository"){
-                                FeedRepositoryTestScreen(feedRepository = feedRepository,
-                                    feedLoadRepository = feedLoadRepository,
-                                    feedFlowRepository = feedFlowRepository)
-                            }
-                        }
-
+                        TorangGridNavigation(navController = navController,
+                            loginRepository = { LoginRepositoryTest(loginRepository) },
+                            feedRepository  = { FeedRepositoryTestScreen(feedRepository = feedRepository,
+                                                                       feedLoadRepository = feedLoadRepository,
+                                                                       feedFlowRepository = feedFlowRepository)},
+                            torangGrid      = { TorangGridTest() })
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun TorangGridNavigation(navController : NavHostController,
+                                     loginRepository : @Composable ()->Unit = {},
+                                     feedRepository : @Composable ()->Unit = {},
+                                     torangGrid : @Composable ()->Unit = {},
+                                     ){
+        NavHost(navController = navController,
+                startDestination = "menu") {
+            menu(navController)
+            composable("torangGrid"){ torangGrid() }
+            composable("loginRepository"){ loginRepository() }
+            composable("feedRepository"){ feedRepository() }
         }
     }
 }
