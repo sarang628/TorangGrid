@@ -1,15 +1,31 @@
 package com.sarang.torang.compose.feedgrid
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,7 +44,8 @@ fun TorangGridSuccess(
     uiState     : FeedGridUiState.Success   = FeedGridUiState.Success(),
     onRefresh   : () -> Unit                = {},
     onBottom    : (Int) -> Unit             = {},
-    onClickItem : (Int) -> Unit             = {}
+    onClickItem : (Int) -> Unit             = {},
+    onSearch    : () -> Unit                = {}
 ){
     LocalTorangGridPullToRefresh.current.invoke(
         TorangGridPullToRefreshData(
@@ -50,6 +67,12 @@ fun TorangGridSuccess(
                         }
                     },
                     content                 = {
+                        item(span = {
+                            // 현재 그리드의 최대 가로 스팬(컬럼 수)만큼 차지하도록 설정
+                            GridItemSpan(maxLineSpan)
+                        }) {
+                            SearchView(onSearch = onSearch)
+                        }
                         items(uiState.list){
                             LocalTorangGridImageLoaderType.current.invoke(
                                 TorangGridImageLoaderData(
@@ -73,7 +96,13 @@ fun TorangGridSuccess(
 @Composable
 fun SuccessTest() {
     val uiState = FeedGridUiState.Success(
-        listOf(), false
+        listOf(
+            FeedGridItemUiState(0, ""),
+            FeedGridItemUiState(0, ""),
+            FeedGridItemUiState(0, ""),
+            FeedGridItemUiState(0, ""),
+            FeedGridItemUiState(0, ""),
+        ), false
     )
     TorangGridContainer(
         uiState = uiState,

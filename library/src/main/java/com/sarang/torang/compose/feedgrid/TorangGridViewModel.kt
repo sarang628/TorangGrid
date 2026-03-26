@@ -30,6 +30,7 @@ class TorangGridViewModel @Inject constructor(
                                                                          started = SharingStarted.WhileSubscribed(5000),
                                                                          initialValue = FeedGridUiState.Loading)
 
+    var isSearch : MutableStateFlow<Boolean> = MutableStateFlow(false); private set
 
     fun onBottom(feedId: Int) {
         viewModelScope.launch {
@@ -49,6 +50,14 @@ class TorangGridViewModel @Inject constructor(
             refreshFeedUseCase.invoke()
             isRefreshing.emit(false)
         }
+    }
+
+    fun onSearch(){
+        isSearch.value = true
+    }
+
+    fun onSearchBack() {
+        isSearch.value = false
     }
 
 }
