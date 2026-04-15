@@ -38,7 +38,7 @@ class TorangGridViewModel @Inject constructor(
                 Log.d(tag, "onBottom feedId: $feedId")
                 loadFeedUserCase.invoke(feedId)
             } catch (e: Exception) {
-                Log.e("__TorangGridViewModel", e.toString())
+                Log.e("__TorangGridViewModel", "${e.message}")
             }
         }
     }

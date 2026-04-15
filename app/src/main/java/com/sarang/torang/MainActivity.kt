@@ -18,6 +18,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -49,40 +50,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            TorangTheme {
-                val snackBarHostState = remember { SnackbarHostState() }
-                val navController = rememberNavController()
-
-                Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = {
-                    SnackbarHost(hostState = snackBarHostState)
-                }) { innerPadding ->
-                    Box(Modifier.fillMaxSize().padding(innerPadding))
-                    {
-                        TorangGridNavigation(navController = navController,
-                            loginRepository = { LoginRepositoryTest(loginRepository) },
-                            feedRepository  = { FeedRepositoryTestScreen(feedRepository = feedRepository,
-                                                                       feedLoadRepository = feedLoadRepository,
-                                                                       feedFlowRepository = feedFlowRepository)},
-                            torangGrid      = { TorangGridTest() })
-                    }
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun TorangGridNavigation(navController : NavHostController,
-                                     loginRepository : @Composable ()->Unit = {},
-                                     feedRepository : @Composable ()->Unit = {},
-                                     torangGrid : @Composable ()->Unit = {},
-                                     ){
-        NavHost(navController = navController,
-                startDestination = "menu") {
-            menu(navController)
-            composable("torangGrid"){ torangGrid() }
-            composable("loginRepository"){ loginRepository() }
-            composable("feedRepository"){ feedRepository() }
+            val navController = rememberNavController()
+            TorangGridNavigation(navController = navController,
+                loginRepository = { LoginRepositoryTest(loginRepository) },
+                feedRepository  = { FeedRepositoryTestScreen(
+                                        feedRepository = feedRepository,
+                                        feedLoadRepository = feedLoadRepository,
+                                        feedFlowRepository = feedFlowRepository)},
+                torangGrid      = { TorangGridTest() })
         }
     }
 }

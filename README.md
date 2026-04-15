@@ -1,7 +1,6 @@
 # Torang Grid
 
-그리드 형식으로 피드를 표시하는 화면.<br>
-(instagram의 돋보기 버튼을 누르면 나오는 화면을 참조)
+ 피드의 이미지를 작은 표(그리드) 형태로 표시하는 화면.<br>
 
 Tech Stack
 - Kotlin
@@ -10,3 +9,5 @@ Tech Stack
 - Android Architecture
   - UILayer
   - DomainLayer
+
+

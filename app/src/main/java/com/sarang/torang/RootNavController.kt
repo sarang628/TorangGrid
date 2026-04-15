@@ -16,4 +16,8 @@ class RootNavController {
     fun restaurant(restaurantId: Int) {
 
     }
+
+    fun restaurantImagePager(i : Int){
+
+    }
 }
